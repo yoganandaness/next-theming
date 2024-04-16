@@ -1,13 +1,43 @@
+"use client";
 import Image from "next/image";
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme()
+
+  function setDocumentStyleProperty(property: string, value: string){
+    document.documentElement.style.setProperty(property, value)
+  }
+
+  useEffect(() => {
+    // sleep for 3 seconds
+    setTimeout(() => {
+      setDocumentStyleProperty("--primary-color", "red")
+      setDocumentStyleProperty("--primary-color-dark", "blue")
+      setMounted(true)
+    }, 3000)
+  }, [])
+
+  if (!mounted) {
+    return <>Loading....</>
+  }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 dark:bg-black">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
           <code className="font-mono font-bold">app/page.tsx</code>
         </p>
+        <div>
+          The current theme is: {theme}
+          <button onClick={() => setTheme('light')}>Light Mode</button>
+          <button onClick={() => setTheme('dark')}>Dark Mode</button>
+        </div>
+        <div className='p-20 bg-primary-color dark:bg-primary-color-dark'>
+          BOX
+        </div>
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
           <a
             className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
